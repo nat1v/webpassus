@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Elepthen XX</title>
+
+<style>
+
+.radar-btn{
+  position: relative;
+  overflow: visible;
+  z-index: 1;
+  border-radius: 30px;
+  background: linear-gradient(90deg,#004d40,#00796b);
+}
+
+/* RING RADAR UTAMA */
+.radar-btn::before{
+  content:"";
+  position:absolute;
+  inset:-18px;
+  border-radius: 50px;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(0,255,200,0.4) 60deg,
+    transparent 120deg,
+    rgba(0,180,255,0.3) 200deg,
+    transparent 360deg
+  );
+  filter: blur(10px);
+  animation: radarSpin 2.2s linear infinite;
+  z-index: -2;
+}
+
+/* PULSE AREA DALAM */
+.radar-btn::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius: 30px;
+  background: radial-gradient(circle,
+    rgba(0,255,200,0.25),
+    rgba(0,90,80,0.9));
+  animation: pulse 1.6s ease-in-out infinite;
+  z-index: -1;
+}
+
+/* TITIK RADAR */
+.radar-btn .dot{
+  position:absolute;
+  width:8px;
+  height:8px;
+  background:#00ffd5;
+  border-radius:50%;
+  box-shadow:0 0 10px #00ffd5;
+  opacity:0;
+  animation: moveDot 3s infinite ease-in-out;
+}
+
+/* POSISI RANDOM TITIK */
+.radar-btn .dot:nth-child(1){ top:-10px; left:50%; animation-delay:0s;}
+.radar-btn .dot:nth-child(2){ top:20%; right:-10px; animation-delay:0.5s;}
+.radar-btn .dot:nth-child(3){ bottom:-10px; left:30%; animation-delay:1s;}
+.radar-btn .dot:nth-child(4){ bottom:20%; left:-10px; animation-delay:1.5s;}
+.radar-btn .dot:nth-child(5){ top:40%; left:80%; animation-delay:2s;}
+
+/* ANIMASI ROTASI RADAR */
+@keyframes radarSpin{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
+
+/* PULSE HALUS */
+@keyframes pulse{
+  0%,100%{transform:scale(1);opacity:0.6;}
+  50%{transform:scale(1.05);opacity:1;}
+}
+
+/* GERAK TITIK (MUNCUL-HILANG SEPERTI DETEKSI) */
+@keyframes moveDot{
+  0%{
+    transform:scale(0);
+    opacity:0;
+  }
+  30%{
+    transform:scale(1);
+    opacity:1;
+  }
+  60%{
+    transform:translate(10px,-10px) scale(1);
+    opacity:1;
+  }
+  100%{
+    transform:translate(0,0) scale(0);
+    opacity:0;
+  }
+}
+
+/* HOVER */
+.radar-btn:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 30px rgba(0,255,200,0.5),
+             0 0 60px rgba(0,150,255,0.3);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+
+body{
+  font-family:Segoe UI,sans-serif;
+  background:#140606;
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* BACKGROUND ANIMASI DENGAN GELOMBANG LEMBUT */
+.bg{
+  position:fixed;
+  inset:0;
+  background:
+  radial-gradient(circle at 20% 20%,#ff3b3b44,transparent 30%),
+  radial-gradient(circle at 80% 30%,#99000055,transparent 35%),
+  linear-gradient(135deg,#180303,#2d0707,#3a0909);
+  background-size:400% 400%; /* Diperbesar agar pergerakan gradasi terlihat dinamis */
+  animation:moveWave 15s ease-in-out infinite; /* Menggunakan animasi gelombang baru */
+  z-index:-1;
+}
+
+/* KEYFRAME ANIMASI BACKGROUND WAVE */
+@keyframes moveWave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* HEADER */
+header{
+  position:fixed;
+  top:0;
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  padding:16px 7%;
+  background:#2b0000cc;
+  backdrop-filter:blur(12px);
+  z-index:99;
+}
+
+nav a{
+  color:#fff;
+  text-decoration:none;
+  margin-left:18px;
+}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  padding:80px;
+}
+
+h1{
+  font-size:62px;
+  background:linear-gradient(90deg,#ff5959,#fff,#ff4040);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+/* SECTION */
+section{
+  padding:90px 7%;
+}
+
+/* GRID FIX */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:22px;
+  align-items:stretch;
+}
+
+/* CARD */
+.card,.photo{
+  background:#ffffff10;
+  border:1px solid #ffffff22;
+  border-radius:18px;
+  padding:20px;
+  backdrop-filter:blur(10px);
+  transition:.35s;
+}
+
+.card:hover,.photo:hover{
+  transform:translateY(-6px);
+}
+
+/* AVATAR */
+.avatar{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(#ff5757,#8d0000);
+  font-weight:bold;
+  font-size:28px;
+  margin:0 auto 15px;
+  overflow:hidden;
+  transition:.35s;
+}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.card:hover .avatar{
+  transform:scale(1.08);
+}
+
+/* BUTTON */
+.btn{
+  padding:12px 24px;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(90deg,#a40000,#e32626);
+  color:#fff;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 20px rgba(255,0,0,.3);
+}
+
+/* REVEAL ANIMASI */
+.reveal{
+  opacity:0;
+  transform:translateY(35px);
+  transition:1s;
+}
+
+.reveal.show{
+  opacity:1;
+  transform:none;
+}
+
+/* PHOTO GALERI */
+.photo{
+  overflow:hidden;
+}
+
+.photo img{
+  width:100%;
+  display:block;
+  transition:.5s;
+}
+
+.photo:hover img{
+  transform:scale(1.08);
+}
+
+/* FOOTER */
+footer{
+  padding:30px;
+  text-align:center;
+  background:#180303;
+}
+
+/* FORM */
+input,textarea{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  background:#2b1010;
+  color:#fff;
+  border:1px solid #555;
+  border-radius:8px;
+}
+
+/* MOTTO */
+.motto{
+  font-style:italic;
+  color:#cfcfcf;
+  text-align:center;
+  margin:5px 0 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<header>
+  <strong>ELEPHTEN XX</strong>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#sejarah">Sejarah</a>
+    <a href="#visi">Visi</a>
+    <a href="#bio">Biografi</a>
+    <a href="#galeri">Galeri</a>
+    <a href="#kontak">Kontak</a>
+  </nav>
+</header>
+
+<section id="home" class="hero">
+  <div>
+    <h1>ELEPHTEN XX</h1>
+    <p>Bersatu di dalam semangat.</p>
+    <br>
+    <button class="btn radar-btn" onclick="document.getElementById('sejarah').scrollIntoView()">
+      Jelajahi
+    </button>
+  </div>
+</section>
+
+<section id="sejarah">
+  <h2>Sejarah</h2>
+  <div class="card reveal">
+    <p>Isi sejarah organisasi di sini.</p>
+  </div>
+</section>
+
+<section id="visi">
+  <div class="grid">
+    <div class="card reveal">
+      <h2>Visi</h2>
+      <p>Menjadi organisasi yang profesional dan berintegritas.</p>
+    </div>
+
+    <div class="card reveal">
+      <h2>Misi</h2>
+      <ul>
+        <li>Mengembangkan anggota.</li>
+        <li>Membangun kerja sama.</li>
+        <li>Mengabdi kepada masyarakat.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="bio">
+  <h2>Biografi</h2>
+
+  <div class="grid">
+
+    <div class="card reveal">
+      <div class="avatar"><img src="passus1.jpeg"></div>
+      <h3>Muhammad Robeth Azis Alwafi</h3>
+      <p><b>Kelas:</b> Meteorologi</p>
+      <p class="motto">"komandow saya ambil alih, ciap grak."</p>
+      <button class="btn">Lihat Profil</button>
+    </div>
+
+    <div class="card reveal">
+      <div class="avatar"><img src="passus2.jpeg"></div>
+      <h3>Ali Muhammad Furqon</h3>
+      <p><b>Kelas:</b> Geofisika</p>
+      <p class="motto">"jangan personal."</p>
+      <button class="btn">Lihat Profil</button>
+    </div>
+
+    <div class="card reveal">
+      <div class="avatar"><img src="passus3.jpeg"></div>
+      <h3>Komang Adi Ari Jaya Kusuma</h3>
+      <p><b>Kelas:</b> Klimatologi</p>
+      <p class="motto">"Jangan Kau Hina Busung Biu Ku."</p>
+      <button class="btn">Lihat Profil</button>
+    </div>
+    
+    <div class="card reveal">
+      <div class="avatar"><img src="passus4.jpeg"></div>
+      <h3>Muhammad Bayu Aji</h3>
+      <p><b>Kelas:</b> Instrumentasi</p>
+      <p class="motto">"Minggir Minggir."</p>
+      <button class="btn">Lihat Profil</button>
+    </div>
+    
+    <div class="card reveal">
+      <div class="avatar"><img src="passus5.jpeg"></div>
+      <h3>Briyan Wira Prasetya</h3>
+      <p><b>Kelas:</b> Klimatologi</p>
+      <p class="motto">"aku pendiam karena aku caper."</p>
+      <button class="btn">Lihat Profil</button>
+    </div>
+    
+    <div class="card reveal">
+      <div class="avatar"><img src="passus6.jpeg"></div>
+      <h3>Kevin Ronaldhin Karhom</h3>
+      <p><b>Kelas:</b> Meteorologi</p>
+      <p class="motto">"Aku cinta A.M."</p>
+      <button class="btn">Lihat Profil</button>
+    </div>
+    
+    <div class="card reveal">
+      <div class="avatar"><img src="passus7.jpeg"></div>
+      <h3>Jhonatan Felix</h3>
+      <p><b>Kelas:</b> Geofisika</p>
+      <p class="motto">"Aku cinta R.S."</p>
+      <button class="btn">Lihat Profil</button>
+    </div>
+    
+    <div class="card reveal">
+      <div class="avatar"><img src="passus8.jpeg"></div>
+      <h3>Chika Widya Meilani Putri</h3>
+      <p><b>Kelas:</b> Meteorologi</p>
+      <p class="motto">"Aku pendiam karena aku kembaran Briyan."</p>
+      <button class="btn">Lihat Profil</button>
+    </div>
+    
+    <div class="card reveal">
+      <div class="avatar"><img src="passus9.jpeg"></div>
+      <h3>Claudy Douminique Ratu</h3>
+      <p><b>Kelas:</b> Meteorologi</p>
+      <p class="motto">"Senyum Roblox adalah jalan ninja ku."</p>
+      <button class="btn">Lihat Profil</button>
+    </div>
+    
+    <div class="card reveal">
+      <div class="avatar"><img src="passus10.jpeg"></div>
+      <h3>Chelsea Gerald Arsy</h3>
+      <p><b>Kelas:</b> Meteorologi</p>
+      <p class="motto">"Bakat dan Minat ku adalah nelfon."</p>
+      <button class="btn">Lihat Profil</button>
+    </div>
+
+  </div>
+</section>
+
+<section id="galeri">
+  <h2>Galeri</h2>
+  <div class="grid">
+    <div class="photo reveal"><img src="passus9.jpeg"></div>
+    <div class="photo reveal"><img src="https://picsum.photos/500/320?random=2"></div>
+    <div class="photo reveal"><img src="https://picsum.photos/500/320?random=3"></div>
+    <div class="photo reveal"><img src="https://picsum.photos/500/320?random=4"></div>
+    <div class="photo reveal"><img src="https://picsum.photos/500/320?random=5"></div>
+    <div class="photo reveal"><img src="https://picsum.photos/500/320?random=6"></div>
+  </div>
+</section>
+
+<section id="kontak">
+  <h2>Kontak</h2>
+  <div class="card reveal">
+    <input placeholder="Nama">
+    <input placeholder="Email">
+    <textarea placeholder="Pesan"></textarea>
+    <button class="btn">Kirim</button>
+  </div>
+</section>
+
+<footer>
+  ©2026 PASUKAN KHUSUS STMKG
+  <p>Dibuat oleh Jhonatan Felix Theodorothyos Song Chao</p>
+</footer>
+
+<script>
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting) e.target.classList.add('show')
+  })
+},{threshold:.15});
+
+document.querySelectorAll('.reveal').forEach(x=>io.observe(x));
+</script>
+
+</body>
+</html>
