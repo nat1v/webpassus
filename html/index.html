@@ -1,1 +1,377 @@
-<header> Robeth bampu
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELEPHTEN XX - Profil & Artikel</title>
+    <style>
+        /* --- PALET WARNA MERAH PUTIH KEDINASAN --- */
+        :root {
+            --patriot-red: #d6001c;
+            --scarlet-glow: #ff2a4b;
+            --pure-white: #ffffff;
+            --dark-base: #0a0304;
+            --text-light: #f8fafc;
+            --text-muted: #cbd5e1;
+            --card-bg: rgba(20, 5, 8, 0.75);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--dark-base);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.8;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- KANVAS ANIMASI GELOMBANG MERAH PUTIH (FIXED) --- */
+        #waveCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.85;
+        }
+
+        /* --- TOMBOL AUDIO CONTROLLER --- */
+        .audio-control {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 100;
+            background: rgba(214, 0, 28, 0.2);
+            border: 1px solid var(--scarlet-glow);
+            color: var(--pure-white);
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(214, 0, 28, 0.3);
+        }
+
+        .audio-control:hover {
+            background: var(--patriot-red);
+            box-shadow: 0 0 20px var(--scarlet-glow);
+            transform: translateY(-2px);
+        }
+
+        /* --- WRAPPER KONTEN UTAMA --- */
+        .page-container {
+            position: relative;
+            z-index: 10;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 80px 25px 120px 25px;
+        }
+
+        /* --- HEADER JUDUL --- */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 35px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cadet-motto {
+            font-size: 0.85rem;
+            color: var(--scarlet-glow);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-shadow: 0 0 10px rgba(255, 42, 75, 0.5);
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            background: linear-gradient(to bottom, #ffffff 50%, #f87171 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 4px 15px rgba(214, 0, 28, 0.4));
+        }
+
+        .hero-section p.subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- AREA KETIK TULISAN PANJANG --- */
+        .article-content {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 45px;
+            border-radius: 12px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+
+        .article-content h2 {
+            color: var(--pure-white);
+            font-size: 1.5rem;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--patriot-red);
+            padding-left: 15px;
+            text-shadow: 0 0 8px rgba(214, 0, 28, 0.4);
+        }
+
+        .article-content h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .article-content p {
+            margin-bottom: 22px;
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            text-align: justify;
+        }
+
+        .article-content blockquote {
+            margin: 30px 0;
+            padding: 20px 25px;
+            background: rgba(214, 0, 28, 0.12);
+            border-left: 4px solid var(--scarlet-glow);
+            font-style: italic;
+            color: var(--pure-white);
+            border-radius: 0 8px 8px 0;
+        }
+
+        @media (max-width: 600px) {
+            .hero-section h1 { font-size: 2.2rem; }
+            .article-content { padding: 25px; }
+            .audio-control { top: 15px; right: 15px; font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tombol Pengontrol Musik Ambient -->
+    <button class="audio-control" id="audioBtn" onclick="toggleAudio()">
+        <span id="audioIcon">🎵</span> <span id="audioText">Putar Alunan Nada</span>
+    </button>
+
+    <!-- Canvas Gelombang Merah Putih -->
+    <canvas id="waveCanvas"></canvas>
+
+    <!-- Konten Utama Halaman -->
+    <main class="page-container">
+        
+        <header class="hero-section">
+            <div class="cadet-motto">Bayu - Hobi - Polo</div>
+            <h1>Artikel Elephten XX</h1>
+            <p class="subtitle">By Jhonatan Felix</p>
+        </header>
+
+        <!-- AREA KETIK TULISAN PANJANG ANDA DI SINI -->
+        <article class="article-content">
+            
+            <h2>PENGARUH PENDIDIKAN SEMI MILITER DALAM DUNIA PERGURUAN TINGGI MODERN</h2>
+            <p>
+                Dalam beberapa tahun terakhir, sejumlah kasus kekerasan dalam kegiatan pembinaan mahasiswa di berbagai perguruan tinggi kembali menjadi perhatian publik. Data terbaru memperkuat keresahan ini bukan sekadar persepsi: Jaringan Pemantau Pendidikan Indonesia (JPPI) mencatat lonjakan kasus kekerasan di lembaga pendidikan, dari 285 kasus pada 2023 menjadi 573 kasus sepanjang 2024  setara dengan rata-rata lebih dari satu kasus kekerasan setiap hari.1 Di jenjang perguruan tinggi secara khusus, Komnas Perempuan mencatat 82 kasus kekerasan seksual yang dilaporkan terjadi di lingkungan kampus sepanjang 2021–2024, sementara laporan kekerasan terhadap perempuan secara keseluruhan pada 2024 saja mencapai 4.178 kasus.2 Angka-angka ini menunjukkan bahwa hukuman fisik yang berlebihan, tekanan psikologis, hingga praktik senioritas yang melampaui batas bukan sekadar insiden terisolasi, melainkan pola yang terus berulang. Di sisi lain, banyak perguruan tinggi  khususnya sekolah kedinasan seperti sekolah pelayaran dan pemerintahan  tetap mempertahankan pola pendidikan semi militer dengan tujuan menanamkan disiplin, kepemimpinan, dan ketangguhan mental. Sebagai mahasiswa, saya memahami bahwa disiplin merupakan fondasi penting bagi keberhasilan seseorang. Namun, saya mulai mempertanyakan satu hal: ketika pembentukan karakter lebih banyak dibangun melalui rasa takut daripada kesadaran, apakah tujuan pendidikan benar-benar tercapai, atau justru melahirkan generasi yang patuh, tetapi kehilangan keberanian untuk berpikir kritis?
+
+            </p>
+             <p>
+     		  Persoalan ini tidak dapat dipandang sebagai kasus yang berdiri sendiri. Pola pembinaan yang mengadopsi pendekatan semi militer masih diterapkan, dengan tingkat penerapan yang beragam, di berbagai perguruan tinggi di Indonesia, baik pada masa orientasi mahasiswa baru maupun dalam kegiatan organisasi kemahasiswaan. Kasus paling menonjol datang dari sekolah kedinasan berpola militer. Pada 3 Mei 2024, taruna tingkat satu Sekolah Tinggi Ilmu Pelayaran (STIP) Jakarta, Putu Satria Ananta Rastika (19), meninggal dunia setelah dianiaya seniornya karena dianggap melakukan "kesalahan" sepele, yakni mengenakan baju olahraga saat masuk kelas.3 Tragisnya, kasus ini bukan yang pertama di institusi yang sama: tercatat taruna STIP lain tewas akibat penganiayaan senior pada 2008 (Agung Bastian), 2014 (Dimas Dikita Handoko), 2015 (Daniel Roberto Tampubolon), dan 2017 (Amirulloh Adityas Putra).4 Pola serupa juga pernah terjadi di Institut Pemerintahan Dalam Negeri (IPDN), ketika praja Cliff Muntu ditemukan tewas pada April 2007 akibat pemukulan senior, dengan hasil autopsi menunjukkan pendarahan pada organ dalam akibat benda tumpul.5 Berulangnya kasus serupa selama lebih dari satu dekade, di institusi yang berbeda-beda namun dengan pola kekerasan yang nyaris identik, mengindikasikan bahwa persoalan ini bersifat sistemik, bukan sekadar kesalahan oknum. Pemerintah pun telah merespons secara regulatif melalui Peraturan Menteri Pendidikan, Kebudayaan, Riset, dan Teknologi Nomor 55 Tahun 2024, yang secara eksplisit mendefinisikan dan memperluas cakupan kekerasan di perguruan tinggi  meliputi kekerasan fisik, psikis, perundungan, kekerasan seksual, diskriminasi, hingga kebijakan kampus yang mengandung unsur kekerasan serta mewajibkan pembentukan Satuan Tugas Pencegahan dan Penanganan Kekerasan di Perguruan Tinggi (Satgas PPKPT) di setiap kampus.6 Namun demikian, riset lapangan menunjukkan bahwa mayoritas korban, sekitar 63 persen, memilih tidak melaporkan kasus yang mereka alami ke pihak kampus, sering kali karena relasi kuasa yang timpang antara pelaku dan korban.7 Tanpa evaluasi yang menyeluruh, perguruan tinggi berisiko menghasilkan lulusan yang disiplin dalam menjalankan perintah, tetapi kurang terlatih untuk berpikir kritis, menyampaikan gagasan secara konstruktif, serta mengambil keputusan secara mandiri — padahal kemampuan-kemampuan tersebut sangat dibutuhkan untuk menghadapi tantangan abad ke-21.
+
+            </p>
+            
+            <p>
+     		  Sebagian orang beranggapan bahwa semakin keras sistem pembinaan yang diterapkan, semakin baik pula karakter yang akan terbentuk. Pandangan tersebut sekilas terdengar masuk akal karena disiplin memang identik dengan ketegasan. Bahkan setelah rangkaian kematian taruna STIP, sejumlah pihak — termasuk organisasi pelaut — tidak menuntut penghapusan total sistem senioritas, melainkan mendorong agar hukuman kepada junior diarahkan pada bentuk yang lebih edukatif, seperti latihan fisik terukur, bukan kekerasan.8 Ini menegaskan bahwa problemnya bukan pada eksistensi disiplin itu sendiri, melainkan pada metode penegakannya. Karakter yang kuat tidak lahir semata-mata dari kepatuhan terhadap aturan, melainkan dari kemampuan memahami tujuan dan nilai yang mendasari aturan tersebut. Mahasiswa berada pada fase perkembangan menuju kedewasaan intelektual, ketika kemampuan berpikir kritis, mengemukakan pendapat, serta mengambil keputusan secara mandiri seharusnya terus dikembangkan. Apabila proses pembinaan justru lebih banyak menumbuhkan rasa takut melakukan kesalahan daripada keberanian untuk bertanya, berdiskusi, dan menyampaikan gagasan, tujuan pendidikan berpotensi bergeser dari proses pembelajaran menjadi sekadar penanaman kepatuhan. Disiplin memang penting, tetapi disiplin yang tumbuh atas dasar kesadaran akan bertahan lebih lama daripada disiplin yang lahir karena tekanan. Oleh sebab itu, perguruan tinggi seharusnya tidak hanya menghasilkan lulusan yang patuh terhadap instruksi, tetapi juga individu yang mampu berpikir kritis, berinovasi, serta bertanggung jawab atas setiap keputusan yang diambil.
+
+            </p>
+            
+            <p>
+     		  Gagasan bahwa pendidikan tinggi harus mengembangkan kemampuan berpikir kritis sejalan dengan arah kebijakan pendidikan nasional. Undang-Undang Nomor 12 Tahun 2012 tentang Pendidikan Tinggi menegaskan bahwa pendidikan tinggi bertujuan mengembangkan potensi mahasiswa agar menjadi insan yang berilmu, kreatif, mandiri, kompeten, dan berbudaya. Sejalan dengan itu, UNESCO menempatkan kemampuan berpikir kritis (critical thinking), kolaborasi, komunikasi, dan kreativitas sebagai kompetensi utama yang perlu dimiliki untuk menghadapi tantangan abad ke-21. Permendikbudristek 55/2024 memperkuat arah ini dengan menegaskan bahwa kampus wajib menjadi ruang bebas dari kekerasan sebagai prasyarat tercapainya tujuan pendidikan tersebut.6 Hal ini menunjukkan bahwa disiplin tetap menjadi bagian penting dalam proses pendidikan, tetapi tidak boleh menghilangkan ruang bagi mahasiswa untuk bertanya, berdialog, serta menyampaikan gagasan secara bertanggung jawab. Dengan demikian, pembinaan yang ideal bukanlah pembinaan yang menumbuhkan rasa takut untuk berbuat salah, melainkan pembinaan yang mendorong mahasiswa bertanggung jawab atas setiap tindakan berdasarkan kesadaran, bukan sekadar kepatuhan.
+
+            </p>
+            
+             <p>
+     		Mengevaluasi pendidikan semi militer bukan berarti menghilangkan seluruh nilai positif yang selama ini dibangun. Disiplin, tanggung jawab, ketahanan mental, serta kemampuan bekerja sama tetap merupakan bekal penting bagi mahasiswa. Yang perlu diperbaiki bukanlah tujuannya, melainkan pendekatan dalam proses pembinaannya. Ketegasan tidak harus diwujudkan melalui tekanan fisik maupun psikologis, tetapi dapat dibangun melalui sistem yang edukatif, menghargai martabat mahasiswa, serta mendorong keterlibatan aktif mereka dalam proses pembelajaran. Upaya pertama yang perlu dilakukan adalah menyusun standar pembinaan mahasiswa yang berorientasi pada proses pendidikan, bukan semata-mata pada kepatuhan. Setiap kegiatan harus memiliki tujuan pembelajaran yang jelas, metode yang terukur, serta mekanisme evaluasi yang dapat memastikan bahwa pembinaan benar-benar memberikan manfaat bagi perkembangan mahasiswa. Kehadiran Satgas PPKPT sesuai amanat Permendikbudristek 55/2024 merupakan langkah awal yang tepat, namun efektivitasnya di lapangan masih perlu diperkuat mengingat data menunjukkan bahwa mayoritas korban kekerasan kampus masih enggan melapor.7 Dengan demikian, tidak ada ruang bagi praktik perundungan, intimidasi, ataupun penyalahgunaan wewenang yang berlindung di balik dalih pembentukan karakter.
+            </p>
+            
+             <p>
+     		Selain itu, kompetensi para pembina, dosen, maupun senior perlu terus ditingkatkan melalui pelatihan tentang kepemimpinan, komunikasi, psikologi perkembangan mahasiswa, serta manajemen konflik. Temuan riset menunjukkan bahwa kekerasan di kampus tidak hanya terjadi antarmahasiswa, tetapi juga melibatkan dosen, tenaga kependidikan, bahkan pejabat struktural kampus, dan pelakunya kerap hanya menerima sanksi ringan seperti teguran atau pemindahan jabatan.9 Kondisi ini memperlihatkan bahwa penguatan kompetensi pembina harus berjalan beriringan dengan penegakan sanksi yang tegas dan proporsional, agar hubungan antara pembina dan mahasiswa menjadi lebih konstruktif dan disiplin benar-benar tumbuh dari kesadaran, bukan dari rasa takut. Pada akhirnya, perguruan tinggi perlu membangun budaya dialog yang sehat. Mahasiswa perlu diberi ruang untuk menyampaikan pendapat, memberikan umpan balik terhadap sistem pembinaan, serta terlibat dalam proses penyempurnaannya. Ketika disiplin dipadukan dengan penghormatan terhadap martabat manusia, nalar kritis, dan nilai-nilai kemanusiaan, pendidikan tinggi tidak hanya menghasilkan lulusan yang taat terhadap aturan, tetapi juga pribadi yang mampu berpikir kritis, mengambil keputusan secara bijaksana, serta bertanggung jawab kepada masyarakat.
+            </p>
+            
+            <p>
+     		Urgensi mengevaluasi pola pendidikan semi militer tidak hanya berkaitan dengan kehidupan di lingkungan kampus, tetapi juga dengan kualitas sumber daya manusia Indonesia pada masa depan. Dunia kerja dan kehidupan bermasyarakat saat ini membutuhkan lulusan yang mampu beradaptasi terhadap perubahan, menyelesaikan persoalan yang kompleks, serta bekerja sama dalam lingkungan yang beragam. Tren kenaikan angka kekerasan di dunia pendidikan sejak 2020, sebagaimana dicatat JPPI, menjadi alarm bahwa institusi pendidikan — termasuk perguruan tinggi — belum sepenuhnya berhasil menjadi ruang yang aman sekaligus produktif bagi pembentukan generasi unggul.1 Kemampuan yang dibutuhkan dunia kerja tidak cukup ditumbuhkan melalui kepatuhan terhadap aturan, tetapi juga melalui keberanian untuk berpikir kritis, berkomunikasi secara terbuka, dan mengambil keputusan secara mandiri. Oleh karena itu, pembentukan karakter di perguruan tinggi perlu menyeimbangkan disiplin dengan pengembangan daya nalar, kreativitas, dan kemandirian berpikir. Dengan keseimbangan tersebut, perguruan tinggi tidak hanya menjadi tempat mencetak lulusan yang tertib dan berintegritas, tetapi juga melahirkan generasi yang inovatif, adaptif, serta siap menghadapi tantangan pembangunan Indonesia pada masa depan.
+            </p>
+            
+             <p>
+     		Agar tujuan pembentukan karakter benar-benar tercapai, perguruan tinggi perlu menempuh tiga langkah strategis. Pertama, setiap program pembinaan mahasiswa perlu dievaluasi secara berkala dengan melibatkan mahasiswa, dosen, psikolog pendidikan, serta pimpinan perguruan tinggi agar pelaksanaannya tetap relevan, efektif, dan terhindar dari praktik yang berpotensi merugikan mahasiswa — sebagaimana ditunjukkan oleh kasus-kasus kematian taruna yang berulang di institusi yang sama tanpa evaluasi sistemik yang memadai.4 Kedua, perguruan tinggi perlu menetapkan pedoman pembinaan yang jelas, mencakup metode pelaksanaan, batas kewenangan pembina, serta mekanisme pelaporan dan penanganan apabila terjadi dugaan intimidasi atau penyalahgunaan wewenang, dengan memastikan kanal pelaporan benar-benar aman dan bebas dari relasi kuasa yang membungkam korban.7 Ketiga, pembinaan karakter perlu lebih diarahkan pada kegiatan yang mengembangkan kepemimpinan, pengabdian kepada masyarakat, kemampuan memecahkan masalah, dan kerja sama tim melalui pengalaman belajar secara langsung. Dengan langkah-langkah tersebut, disiplin tetap dapat ditanamkan sebagai nilai utama tanpa mengabaikan hak mahasiswa untuk berpikir kritis, menyampaikan pendapat secara bertanggung jawab, dan berkembang sebagai insan akademik yang utuh.
+            </p>
+            
+              <p>
+     		
+		Pada akhirnya, tujuan pendidikan tinggi bukan sekadar membentuk mahasiswa yang mampu mengikuti perintah, melainkan manusia yang mampu berpikir kritis, bertanggung jawab, serta menghadirkan solusi bagi berbagai persoalan masyarakat. Disiplin tetap menjadi fondasi penting dalam pembentukan karakter, tetapi disiplin yang bertahan bukanlah disiplin yang lahir dari rasa takut, melainkan dari kesadaran akan nilai, tanggung jawab, dan kemanusiaan. Karena itu, pendidikan semi militer tidak perlu dihapuskan selama masih memberikan manfaat, tetapi pendekatan yang digunakan harus terus dievaluasi agar selaras dengan tujuan pendidikan tinggi dan perkembangan zaman. Pada akhirnya, keberhasilan sebuah kampus tidak diukur dari seberapa patuh mahasiswanya terhadap perintah, melainkan dari seberapa mampu lulusannya berpikir jernih, bertindak bijaksana, serta tetap menjunjung martabat manusia ketika menghadapi persoalan nyata. Sebab, pendidikan yang berhasil bukanlah pendidikan yang menciptakan ketakutan, melainkan pendidikan yang menumbuhkan keberanian untuk berpikir, keberanian untuk bertanggung jawab, dan keberanian untuk menjadi manusia seutuhnya.
+            </p>
+            
+
+            <blockquote>
+                "Merah pada darah kita adalah keberanian, Putih pada tulang kita adalah kesucian. Jiwa taruna adalah milik Sang Merah Putih."
+            </blockquote>
+
+        </article>
+
+    </main>
+
+    <!-- --- ENGINE JAVASCRIPT: GELOMBANG MERAH PUTIH & AUDIO SYNTHESIZER --- -->
+    <script>
+        // --- 1. ENGINE GELOMBANG ELEGAN (FLUID WAVELINE CANVAS) ---
+        const canvas = document.getElementById('waveCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        let time = 0;
+
+        function drawFluidWaves() {
+            ctx.clearRect(0, 0, width, height);
+            time += 0.008;
+
+            // Lapisan Gelombang 1: Merah Bergelombang (Top Surge)
+            ctx.save();
+            let redGrad = ctx.createLinearGradient(0, 0, width, height);
+            redGrad.addColorStop(0, 'rgba(214, 0, 28, 0.45)');
+            redGrad.addColorStop(1, 'rgba(139, 0, 0, 0.15)');
+            
+            ctx.fillStyle = redGrad;
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+
+            for (let x = 0; x <= width; x += 10) {
+                let y = Math.sin(x * 0.003 + time) * 70 + 
+                        Math.cos(x * 0.001 + time * 1.2) * 40 + (height * 0.25);
+                ctx.lineTo(x, y);
+            }
+            ctx.lineTo(width, 0);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+
+            // Lapisan Gelombang 2: Putih Transparan (Pure White Wave)
+            ctx.save();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+
+            for (let x = 0; x <= width; x += 10) {
+                let y = Math.cos(x * 0.002 - time * 0.9) * 80 + 
+                        Math.sin(x * 0.004 + time) * 30 + (height * 0.65);
+                ctx.lineTo(x, y);
+            }
+            ctx.lineTo(width, height);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+
+            // Lapisan Gelombang 3: Garis Sinar Merah Tegangan Tinggi (Glow Line)
+            ctx.save();
+            ctx.strokeStyle = 'rgba(255, 42, 75, 0.4)';
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#ff2a4b';
+            ctx.beginPath();
+
+            for (let x = 0; x <= width; x += 15) {
+                let y = Math.sin(x * 0.002 + time * 1.5) * 60 + (height * 0.5);
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.restore();
+
+            requestAnimationFrame(drawFluidWaves);
+        }
+
+        drawFluidWaves();
+
+        // --- 2. ENGINE SYNTHESIZER AUDIO AMBIENT (ALUNAN NADA) ---
+        // Menggunakan Web Audio API internal (tanpa perlu file .mp3 eksternal)
+        let audioCtx = null;
+        let isPlaying = false;
+        let timerId = null;
+
+        const notes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25]; // Nada Pentatonik Lembut
+
+        function playHarmonicTone() {
+            if (!isPlaying || !audioCtx) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            // Pilih nada secara acak dari susunan harmonis
+            const freq = notes[Math.floor(Math.random() * notes.length)];
+            osc.type = 'sine'; // Suara lembut seperti lonceng/seruling
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+            // Envelope suara (Fade In - Fade Out lembut)
+            gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 1.2);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 4.0);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 4.1);
+
+            // Waktu untuk nada berikutnya
+            let nextInterval = Math.random() * 2000 + 2000;
+            timerId = setTimeout(playHarmonicTone, nextInterval);
+        }
+
+        function toggleAudio() {
+            const btnText = document.getElementById('audioText');
+            const btnIcon = document.getElementById('audioIcon');
+
+            if (!isPlaying) {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                isPlaying = true;
+                btnText.innerText = "Hentikan Nada";
+                btnIcon.innerText = "🔊";
+                playHarmonicTone();
+            } else {
+                isPlaying = false;
+                clearTimeout(timerId);
+                btnText.innerText = "Putar Alunan Nada";
+                btnIcon.innerText = "🎵";
+            }
+        }
+    </script>
+</body>
+</html>
